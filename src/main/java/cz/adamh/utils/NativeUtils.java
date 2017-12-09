@@ -126,27 +126,9 @@ public class NativeUtils {
             System.load(temp.getAbsolutePath());
             return temp.getAbsolutePath();
         } finally {
-            if (isPosixCompliant()) {
-                // Assume POSIX compliant file system, can be deleted after loading
-                temp.delete();
-            } else {
-                // Assume non-POSIX, and don't delete until last file descriptor closed
-                temp.deleteOnExit();
-            }
+            temp.deleteOnExit();
         }
 
-    }
-
-    private static boolean isPosixCompliant() {
-        try {
-            return FileSystems.getDefault()
-                    .supportedFileAttributeViews()
-                    .contains("posix");
-        } catch (FileSystemNotFoundException
-                | ProviderNotFoundException
-                | SecurityException e) {
-            return false;
-        }
     }
 
     private static File createTempDirectory() throws IOException {
